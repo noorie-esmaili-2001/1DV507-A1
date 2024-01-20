@@ -6,9 +6,6 @@ import java.util.*;
 
 public class FerrySystem implements Ferry {
 
-    private final int maxVehicles = 200;
-    private final int maxPassengers = 200;
-
     ArrayList<Vehicle> arrayV;
     ArrayList<Passenger> arrayP;
 
@@ -47,11 +44,11 @@ public class FerrySystem implements Ferry {
         int totalMoney = 0;
 
         for (Vehicle vehicle : getArrayV()) {
-            totalMoney += vehicle.getPrice();
+            totalMoney += vehicle.totalPrice();
         }
 
-        for (Passenger passenger : getArrayP()) {
-            totalMoney += passenger.getPrice();
+        for (int i = 0; i < countPassengers(); i++) {
+            totalMoney += 25;
         }
 
         return totalMoney;
@@ -87,11 +84,13 @@ public class FerrySystem implements Ferry {
     }
 
     public boolean hasSpaceFor(Vehicle v) {
-        return v.getSpace() <= countVehicleSpace();
+        int maxVehicles = 200;
+        return countVehicleSpace() < maxVehicles;
     }
 
     public boolean hasRoomFor(Passenger p) {
-        return countPassengers() < 100;
+        int maxPassengers = 200;
+        return countPassengers() < maxPassengers;
     }
 
     public int currentProfit() {
@@ -100,7 +99,7 @@ public class FerrySystem implements Ferry {
 
     public String toString() {
         return "\n\t\t FERRY STATUS:" + "\nCurrent amount of passengers: " + countPassengers()
-                + "\nNumber of vehicles: " + "\n";
+                + "\nNumber of vehicles: " + countVehicleSpace() + "\n";
     }
 
 }

@@ -7,14 +7,14 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class FerryMain {
+    static Scanner sc = new Scanner(System.in);
+    static FerrySystem ferrySystem = new FerrySystem();
+
+    static int choice;
+    static int numOfPass;
+    static int tmp;
+
     public static void main(String[] args) {
-
-        Scanner sc = new Scanner(System.in);
-        FerrySystem ferrySystem = new FerrySystem();
-
-        int choice;
-        int numOfPass;
-        int tmp;
 
         while (true) {
             System.out.println("""
@@ -53,87 +53,44 @@ public class FerryMain {
                     switch (choice) {
                         case 1:
                             Bicycle bicycle = new Bicycle();
-                            System.out.println("How many passengers? choose a number between " + 0 + " & " + bicycle.getSpace() + ":");
-                            try {
-                                numOfPass = sc.nextInt();
-                                sc.nextLine();
-                                while (numOfPass < 0 || numOfPass > bicycle.getSpace()) {
-                                    System.err.println("Please choose a number between " + 0 + " & " + bicycle.getSpace());
-                                    numOfPass = sc.nextInt();
-                                }
-                                ArrayList<Passenger> passengers = new ArrayList<>();
-                                for (int i = 0; i < numOfPass; i++) {
-                                    System.out.println("What is passenger name?");
-                                    String passengerName = sc.nextLine();
-                                    passengers.add(new Passenger(passengerName));
-                                }
-                                bicycle.setPassengers(passengers);
-                                tmp = bicycle.totalPrice();
-                                System.out.println("The total cost is: " + tmp);
-                                ferrySystem.embark(bicycle);
-                            } catch (InputMismatchException e) {
-                                System.err.println("Invalid input. Please enter a valid number.");
-                                sc.nextLine();
-                            }
+                            embarkVehicle(bicycle);
                             break;
                         case 2:
                             Car car = new Car();
-                            System.out.println("How many passengers?\n" + "select a number between " + 0 + " & " + car.getSpace() + ".");
-                            System.out.print("Your choice: ");
-                            numOfPass = sc.nextInt();
-                            if (numOfPass > car.getSpace() || numOfPass < 0) {
-                                System.err.println("Please choose a number between " + 0 + " and " + car.getSpace() + ".");
-                                break;
-                            } else {
-                                tmp = car.totalPrice();
-                                System.out.println("The total cost is: " + tmp);
-                                ferrySystem.embark(car);
-                            }
+                            embarkVehicle(car);
                             break;
                         case 3:
                             Bus bus = new Bus();
-                            System.out.println("How many passengers?\n" + "select a number between " + 0 + " & " + bus.getSpace() + ".");
-                            System.out.print("Your choice: ");
-                            numOfPass = sc.nextInt();
-                            if (numOfPass > bus.getSpace() | numOfPass < 0) {
-                                System.err.println("Please choose a number between " + 0 + " and " + bus.getSpace() + " Passengers!");
-                                break;
-                            } else {
-                                tmp = bus.totalPrice();
-                                System.out.println("The total cost is: " + tmp);
-                                ferrySystem.embark(bus);
-                            }
+                            embarkVehicle(bus);
                             break;
                         case 4:
                             Lorry lorry = new Lorry();
-                            System.out.println("How many passengers?\n" + "select a number between " + 0 + " & " + lorry.getSpace() + ".");
-                            System.out.print("Your choice: ");
-                            numOfPass = sc.nextInt();
-                            if (numOfPass > lorry.getSpace() || numOfPass < 0) {
-                                System.err.println("Please choose a number between " + 0 + " and " + lorry.getSpace() + " Passengers!");
-                                break;
-                            } else {
-                                tmp = lorry.totalPrice();
-                                System.out.println("The total cost is: " + tmp);
-                                ferrySystem.embark(lorry);
-                            }
+                            embarkVehicle(lorry);
                             break;
                         case 5:
                             break;
                     }
                     break;
                 case 2:
-                    System.out.println("How many passengers?\n" + "select a number between " + 0 + " & " + 200 + ".");
-                    System.out.print("Your choice: ");
-                    numOfPass = sc.nextInt();
-                    if (numOfPass > 200 || numOfPass < 0) {
-                        System.err.println("Please choose a number between " + 0 + " and " + 200 + " Passengers!");
-                        continue;
-                    } else {
-                        Passenger passenger = new Passenger("Noorie");
-                        tmp = passenger.getPrice();
-                        System.out.println("The total cost is: " + tmp);
-                        ferrySystem.embark(passenger);
+                    int passSpace = 200 - ferrySystem.countPassengers();
+                    System.out.println("How many passengers? " + passSpace + " space is left.");
+                    try {
+                        numOfPass = sc.nextInt();
+                        sc.nextLine();
+                        while (numOfPass < 0 || numOfPass > passSpace) {
+                            System.err.println("Please choose a number between " + 0 + " & " + passSpace);
+                            numOfPass = sc.nextInt();
+                        }
+                        for (int i = 0; i < numOfPass; i++) {
+                            System.out.println("What is passenger name?");
+                            String passengerName = sc.nextLine();
+                            ferrySystem.embark(new Passenger(passengerName));
+                        }
+                        System.out.println("The total cost is: " + (numOfPass * 25));
+                        System.out.println(numOfPass + " passengers embarked.");
+                    } catch (InputMismatchException e) {
+                        System.err.println("Invalid input. Please enter a valid number.");
+                        sc.nextLine();
                     }
                     break;
                 case 3:
@@ -144,8 +101,8 @@ public class FerryMain {
                     System.out.println(ferrySystem);
                     Vehicle[] v = ferrySystem.getAllVehicles();
                     System.out.println("===============================");
-                    for (int i = 0; i < v.length; i++) {
-                        System.out.println(v[i]);
+                    for (Vehicle vehicle : v) {
+                        System.out.println(vehicle);
                     }
                     System.out.println("===============================");
                     break;
@@ -154,5 +111,31 @@ public class FerryMain {
             }
         }
 
+    }
+
+    public static void embarkVehicle(Vehicle vehicle) {
+        System.out.println("How many passengers? choose a number between " + 0 + " & " + vehicle.getSpace() + ":");
+        try {
+            numOfPass = sc.nextInt();
+            sc.nextLine();
+            while (numOfPass < 0 || numOfPass > vehicle.getSpace()) {
+                System.err.println("Please choose a number between " + 0 + " & " + vehicle.getSpace());
+                numOfPass = sc.nextInt();
+            }
+            ArrayList<Passenger> passengers = new ArrayList<>();
+            for (int i = 0; i < numOfPass; i++) {
+                System.out.println("What is passenger name?");
+                String passengerName = sc.nextLine();
+                passengers.add(new Passenger(passengerName));
+            }
+            vehicle.setPassengers(passengers);
+            tmp = vehicle.totalPrice();
+            System.out.println("The total cost is: " + tmp);
+            ferrySystem.embark(vehicle);
+            System.out.println(vehicle.getName() + " embarked with " + vehicle.getPassengers().size() + " passengers.");
+        } catch (InputMismatchException e) {
+            System.err.println("Invalid input. Please enter a valid number.");
+            sc.nextLine();
+        }
     }
 }

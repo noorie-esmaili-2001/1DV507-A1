@@ -59,4 +59,14 @@ public abstract class Vehicle {
     public int totalPrice() {
         return getPrice() + getPassengers().size() * getPassengerPrice();
     }
+
+    @Override
+    public String toString() {
+        return getName() +
+                "{space= " + getSpace() +
+                ", price= " + getPrice() +
+                ", passengerPrice= " + getPassengerPrice() +
+                ", passengers= " + getPassengers().size() +
+                '}';
+    }
 }

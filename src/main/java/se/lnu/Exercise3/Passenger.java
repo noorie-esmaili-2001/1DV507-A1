@@ -17,8 +17,4 @@ public class Passenger {
         }
         this.name = name;
     }
-
-    public int getPrice() {
-        return 25;
-    }
 }
