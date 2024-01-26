@@ -1,7 +1,5 @@
 package se.lnu.Exercise4;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Iterator;
 
 public abstract class AbstractIntCollection implements Iterable<Integer> {
@@ -33,7 +31,7 @@ public abstract class AbstractIntCollection implements Iterable<Integer> {
     }
 
     @Override
-    public @NotNull Iterator<Integer> iterator() {
+    public Iterator<Integer> iterator() {
         return new IntIterator();
     }
 
